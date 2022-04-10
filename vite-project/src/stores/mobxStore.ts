@@ -1,14 +1,22 @@
 import { observable, action, computed } from 'mobx'
+import { persist } from 'mobx-persist'
 
-class MobxStore {
-  @observable name = 'World'
+export interface IMobxStore {
+  name: string
+  greeting: string
+  setName(name: string): void
+}
 
-  @computed public get greeting(): string {
+export class MobxStore implements IMobxStore {
+  @persist @observable name = 'World'
+
+  @computed
+  public get greeting(): string {
     return `Hello ${this.name}`
   }
 
-  @action.bound public setName(name: string): void {
+  @action.bound
+  public setName(name: string): void {
     this.name = name
   }
 }
-export mobx

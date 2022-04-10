@@ -1,45 +1,37 @@
-import { useState } from 'react'
-import logo from './logo.svg'
+import React, { Component } from 'react'
 import './App.css'
+import { observer, inject } from 'mobx-react'
+import { IMobxStore } from './stores/mobxStore'
 
-function App() {
-  const [count, setCount] = useState(0)
+interface AppProps {
+  mobxStore?: IMobxStore
+}
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
+@inject('mobxStore')
+@observer
+class App extends Component<AppProps> {
+  render() {
+    const { greeting } = this.props.mobxStore!
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          {greeting}
+          <button onClick={this.clickHandler} value="Bob">
+            Change Greeting
           </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+          <button onClick={this.clickHandler} value="World">
+            Reset
+          </button>
+        </header>
+      </div>
+    )
+  }
+
+  private clickHandler = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+    const { setName } = this.props.mobxStore!
+    setName(e.currentTarget.value)
+  }
 }
 
 export default App
